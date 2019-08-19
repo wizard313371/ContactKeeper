@@ -45,12 +45,24 @@ check('name', 'Name is required').not().isEmpty()
     }
 });
 
-router.put('/:id', (req, res) => {
-    res.send('Update contact');
+router.put('/:id', async (req, res) => {
+    try {
+        const contact = await new Contact.findByIdAndDelete(req.params.id);
+        console.log(req.params.id);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
-router.delete('/:id', (req, res) => {
-    res.send('Delete contact');
+router.delete('/:id', auth, async (req, res) => {
+    try {
+        const contact = await Contact.findByIdAndDelete(req.params.id);
+        res.send('Delete contact');
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
 module.exports = router;
