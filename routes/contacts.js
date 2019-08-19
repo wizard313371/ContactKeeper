@@ -45,10 +45,11 @@ check('name', 'Name is required').not().isEmpty()
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
-        const contact = await new Contact.findByIdAndDelete(req.params.id);
-        console.log(req.params.id);
+        await Contact.findByIdAndUpdate(req.params.id, req.body);
+        const contact = await Contact.findById(req.params.id);
+        res.json(contact);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
